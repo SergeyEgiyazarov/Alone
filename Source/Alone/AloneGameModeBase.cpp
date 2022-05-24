@@ -2,4 +2,9 @@
 
 
 #include "AloneGameModeBase.h"
+#include "Player/ACharacter.h"
 
+AAloneGameModeBase::AAloneGameModeBase()
+{
+	DefaultPawnClass = AACharacter::StaticClass();
+}
