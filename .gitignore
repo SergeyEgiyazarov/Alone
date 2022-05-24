@@ -1,0 +1,12 @@
+.vs/
+.idea/
+*.sln
+Binaries/
+Build/
+Saved/
+Intermediate/*
+Plugins/
+Plugins/*/Intermediate/*
+DerivedDataCache/
+Content/StarterContent/HDRI/
+Content/StarterContent/Maps
