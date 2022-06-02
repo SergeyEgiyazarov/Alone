@@ -4,6 +4,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ACharacterMovementComponent.h"
+#include "Components/AHealthComponent.h"
 
 AACharacter::AACharacter(const FObjectInitializer& ObjInit)
 	: Super(ObjInit.SetDefaultSubobjectClass<UACharacterMovementComponent>(AACharacter::CharacterMovementComponentName))
@@ -18,18 +19,22 @@ AACharacter::AACharacter(const FObjectInitializer& ObjInit)
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+
+	HealthComponent = CreateDefaultSubobject<UAHealthComponent>(TEXT("HealthComponent"));
 }
 
 // Called when the game starts or when spawned
 void AACharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 // Called every frame
 void AACharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 // Called to bind functionality to input

@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UAHealthComponent;
 
 UCLASS()
 class ALONE_API AACharacter : public ACharacter
@@ -25,6 +26,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UAHealthComponent* HealthComponent;
 
 	virtual void BeginPlay() override;
 
