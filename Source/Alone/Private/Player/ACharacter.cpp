@@ -36,17 +36,21 @@ void AACharacter::BeginPlay()
 
     check(HealthComponent);
     check(HealthText);
+
+    OnHealthChanged(HealthComponent->GetHealth());
+    HealthComponent->OnDeath.AddUObject(this, &AACharacter::OnDeath);
+    HealthComponent->OnHealthChanged.AddUObject(this, &AACharacter::OnHealthChanged);
+}
+
+void AACharacter::OnHealthChanged(float Health)
+{
+    HealthText->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called every frame
 void AACharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
-    const auto Health = HealthComponent->GetHealth();
-    HealthText->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
-
-    TakeDamage(0.1f, FDamageEvent{}, Controller, this);
 }
 
 // Called to bind functionality to input
@@ -87,4 +91,13 @@ void AACharacter::StopRunning()
 bool AACharacter::IsRunning() const
 {
     return WantsToRun && !GetVelocity().IsZero();
+}
+
+void AACharacter::OnDeath()
+{
+    UE_LOG(CharacterLog, Display, TEXT("Player %s is dead."), *GetName());
+    PlayAnimMontage(DeathAnimMontage);
+
+    GetCharacterMovement()->DisableMovement();
+    SetLifeSpan(5.0f);
 }
