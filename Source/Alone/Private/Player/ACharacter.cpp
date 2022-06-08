@@ -36,8 +36,6 @@ void AACharacter::BeginPlay()
 
     check(HealthComponent);
     check(HealthText);
-
-    OnTakeAnyDamage.AddDynamic(this, &AACharacter::OnTakeAnyDamageHandle);
 }
 
 // Called every frame
@@ -49,12 +47,6 @@ void AACharacter::Tick(float DeltaTime)
     HealthText->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 
     TakeDamage(0.1f, FDamageEvent{}, Controller, this);
-}
-
-void AACharacter::OnTakeAnyDamageHandle(
-    AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
-{
-    UE_LOG(CharacterLog, Display, TEXT("Damage: %f"), Damage);
 }
 
 // Called to bind functionality to input

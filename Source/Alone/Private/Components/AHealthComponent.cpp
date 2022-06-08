@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/AHealthComponent.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UAHealthComponent::UAHealthComponent()
@@ -9,7 +10,6 @@ UAHealthComponent::UAHealthComponent()
     // off to improve performance if you don't need them.
     PrimaryComponentTick.bCanEverTick = false;
 
-    // ...
 }
 
 void UAHealthComponent::BeginPlay()
@@ -17,4 +17,16 @@ void UAHealthComponent::BeginPlay()
     Super::BeginPlay();
 
     Health = MaxHealth;
+
+    AActor* ComponentOwner = GetOwner();
+    if (ComponentOwner)
+    {
+        ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &UAHealthComponent::OnTakeAnyDamage);
+    }
+}
+
+void UAHealthComponent::OnTakeAnyDamage(
+    AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+    Health -= Damage;
 }

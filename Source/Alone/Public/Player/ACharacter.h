@@ -50,8 +50,4 @@ private:
 
     void StartRunning();
     void StopRunning();
-
-    UFUNCTION()
-    void OnTakeAnyDamageHandle(
-        AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };
