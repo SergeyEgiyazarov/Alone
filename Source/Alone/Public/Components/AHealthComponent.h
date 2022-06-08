@@ -9,29 +9,25 @@
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ALONE_API UAHealthComponent : public UActorComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-
-	// Sets default values for this component's properties
-	UAHealthComponent();
+    // Sets default values for this component's properties
+    UAHealthComponent();
 
 protected:
-
-	// Called when the game starts
-	virtual void BeginPlay() override;
+    // Called when the game starts
+    virtual void BeginPlay() override;
 
 public:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))
+    float MaxHealth = 100.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))
-	float MaxHealth = 100.0f;
-
-	float GetHealth()
-	{
-		return Health;
-	}
+    float GetHealth()
+    {
+        return Health;
+    }
 
 private:
-
-	float Health;
+    float Health;
 };

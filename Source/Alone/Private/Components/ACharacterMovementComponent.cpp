@@ -5,7 +5,7 @@
 
 float UACharacterMovementComponent::GetMaxSpeed() const
 {
-	const float MaxSpeed = Super::GetMaxSpeed();
-	const AACharacter* Player = Cast<AACharacter>(GetPawnOwner());
-	return Player && Player->IsRunning() ? MaxSpeed * RunModifier : MaxSpeed;
+    const float MaxSpeed = Super::GetMaxSpeed();
+    const AACharacter* Player = Cast<AACharacter>(GetPawnOwner());
+    return Player && Player->IsRunning() ? MaxSpeed * RunModifier : MaxSpeed;
 }

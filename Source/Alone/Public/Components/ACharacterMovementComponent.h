@@ -12,12 +12,11 @@
 UCLASS()
 class ALONE_API UACharacterMovementComponent : public UCharacterMovementComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
+    UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Movement", meta = (ClampMin = "1.5", ClampMax = "10.0"))
+    float RunModifier = 2.0f;
 
-	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Movement", meta = (ClampMin = "1.5", ClampMax = "10.0"))
-	float RunModifier = 2.0f;
-
-	virtual float GetMaxSpeed() const override;
+    virtual float GetMaxSpeed() const override;
 };
