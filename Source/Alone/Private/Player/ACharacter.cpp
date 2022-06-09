@@ -6,6 +6,7 @@
 #include "Components/ACharacterMovementComponent.h"
 #include "Components/AHealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "GameFramework/Controller.h"
 
 DEFINE_LOG_CATEGORY_STATIC(CharacterLog, All, All);
 
@@ -100,4 +101,9 @@ void AACharacter::OnDeath()
 
     GetCharacterMovement()->DisableMovement();
     SetLifeSpan(5.0f);
+
+    if (Controller)
+    {
+        Controller->ChangeState(NAME_Spectating);
+    }
 }

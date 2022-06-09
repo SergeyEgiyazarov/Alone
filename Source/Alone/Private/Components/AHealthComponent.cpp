@@ -30,6 +30,7 @@ void UAHealthComponent::OnTakeAnyDamage(
     AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
     if (Damage <= 0.0f || IsDead()) return;
+
     Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
     OnHealthChanged.Broadcast(Health);
 
