@@ -41,6 +41,8 @@ void AACharacter::BeginPlay()
     OnHealthChanged(HealthComponent->GetHealth());
     HealthComponent->OnDeath.AddUObject(this, &AACharacter::OnDeath);
     HealthComponent->OnHealthChanged.AddUObject(this, &AACharacter::OnHealthChanged);
+
+    LandedDelegate.AddDynamic(this, &AACharacter::OnGroundLanded);
 }
 
 void AACharacter::OnHealthChanged(float Health)
@@ -106,4 +108,14 @@ void AACharacter::OnDeath()
     {
         Controller->ChangeState(NAME_Spectating);
     }
+}
+
+void AACharacter::OnGroundLanded(const FHitResult& Hit)
+{
+    const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
+
+    if (FallVelocityZ < LandedDamageVelocity.X) return;
+    const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
+
+    TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }
