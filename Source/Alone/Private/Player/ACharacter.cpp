@@ -6,6 +6,7 @@
 #include "Components/ACharacterMovementComponent.h"
 #include "Components/AHealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/AWeaponComponent.h"
 #include "GameFramework/Controller.h"
 
 DEFINE_LOG_CATEGORY_STATIC(CharacterLog, All, All);
@@ -28,6 +29,9 @@ AACharacter::AACharacter(const FObjectInitializer& ObjInit)
 
     HealthText = CreateDefaultSubobject<UTextRenderComponent>("HealthText");
     HealthText->SetupAttachment(GetRootComponent());
+    HealthText->SetOwnerNoSee(true);
+
+    WeaponComponent = CreateDefaultSubobject<UAWeaponComponent>("WeaponComponent");
 }
 
 // Called when the game starts or when spawned
@@ -60,6 +64,7 @@ void AACharacter::Tick(float DeltaTime)
 void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
+    check(WeaponComponent);
 
     PlayerInputComponent->BindAxis("MoveForward", this, &AACharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &AACharacter::MoveRight);
@@ -69,6 +74,7 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
     PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AACharacter::StartRunning);
     PlayerInputComponent->BindAction("Run", IE_Released, this, &AACharacter::StopRunning);
+    PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UAWeaponComponent::Fire);
 }
 
 void AACharacter::MoveForward(float Amount)

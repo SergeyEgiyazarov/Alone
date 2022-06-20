@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UAHealthComponent;
 class UTextRenderComponent;
+class UAWeaponComponent;
 
 UCLASS()
 class ALONE_API AACharacter : public ACharacter
@@ -32,13 +33,16 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UTextRenderComponent* HealthText;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    UAWeaponComponent* WeaponComponent;
+
     UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* DeathAnimMontage;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UPROPERTY(EditDefaultsOnly, Category = "Damage")
     FVector2D LandedDamageVelocity = FVector2D(600.0f, 1200.0f);
 
-    UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UPROPERTY(EditDefaultsOnly, Category = "Damage")
     FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
 
     virtual void BeginPlay() override;
