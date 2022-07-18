@@ -16,7 +16,8 @@ class ALONE_API UAWeaponComponent : public UActorComponent
 public:
     UAWeaponComponent();
 
-    void Fire();
+    void StartFire();
+    void StopFire();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")

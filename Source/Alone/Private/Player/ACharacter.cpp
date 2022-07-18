@@ -7,6 +7,7 @@
 #include "Components/AHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/AWeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Controller.h"
 
 DEFINE_LOG_CATEGORY_STATIC(CharacterLog, All, All);
@@ -74,7 +75,8 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
     PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AACharacter::StartRunning);
     PlayerInputComponent->BindAction("Run", IE_Released, this, &AACharacter::StopRunning);
-    PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UAWeaponComponent::Fire);
+    PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UAWeaponComponent::StartFire);
+    PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UAWeaponComponent::StopFire);
 }
 
 void AACharacter::MoveForward(float Amount)
@@ -114,6 +116,8 @@ void AACharacter::OnDeath()
     {
         Controller->ChangeState(NAME_Spectating);
     }
+
+    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 }
 
 void AACharacter::OnGroundLanded(const FHitResult& Hit)
