@@ -11,8 +11,25 @@ void AALauncherWeapon::StartFire()
 
 void AALauncherWeapon::MakeShot()
 {
-    const FTransform SpawnTransform(WeaponMesh->GetSocketRotation(MuzzleSocketName), GetMuzzleWorldLocation());
-    auto Projectile = UGameplayStatics::BeginDeferredActorSpawnFromClass(GetWorld(), ProjectileClass, SpawnTransform);
+    if (!GetWorld()) return;
 
-    UGameplayStatics::FinishSpawningActor(Projectile, SpawnTransform);
+    FVector TraceStart;
+    FVector TraceEnd;
+    if (!GetTraceData(TraceStart, TraceEnd)) return;
+
+    FHitResult HitResult;
+    MakeHit(HitResult, TraceStart, TraceEnd);
+
+    FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
+    FVector Direction = (EndPoint - GetMuzzleWorldLocation()).GetSafeNormal();
+
+    const FTransform SpawnTransform(WeaponMesh->GetSocketRotation(MuzzleSocketName), GetMuzzleWorldLocation());
+    AAProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAProjectile>(ProjectileClass, SpawnTransform);
+
+    if (Projectile)
+    {
+        Projectile->SetShotDirection(Direction);
+        Projectile->SetOwner(GetOwner());
+        Projectile->FinishSpawning(SpawnTransform);
+    }
 }
