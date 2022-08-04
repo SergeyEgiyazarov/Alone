@@ -12,7 +12,13 @@ public class Alone : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
-		PublicIncludePaths.AddRange(new string[] { "Alone/Public/Player", "Alone/Public/Components", "Alone/Public/Weapon" });
+		PublicIncludePaths.AddRange(new string[] { 
+			"Alone/Public/Player", 
+			"Alone/Public/Components", 
+			"Alone/Public/Weapon",
+			"Alone/Public/UI",
+			"Alone/Public/Animations"
+		});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

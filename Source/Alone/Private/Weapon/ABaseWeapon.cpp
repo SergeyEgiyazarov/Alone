@@ -20,6 +20,12 @@ AABaseWeapon::AABaseWeapon()
 void AABaseWeapon::BeginPlay()
 {
     Super::BeginPlay();
+
+    check(WeaponMesh);
+    checkf(DefaultAmmo.Bullets > 0, TEXT("Bullets count couldn't be less or equal zero"));
+    checkf(DefaultAmmo.Clips > 0, TEXT("Clips count couldn't be less or equal zero"));
+
+    CurrentAmmo = DefaultAmmo;
 }
 
 void AABaseWeapon::StartFire()
@@ -79,4 +85,60 @@ void AABaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, con
     CollisionParams.AddIgnoredActor(GetOwner());
 
     GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
+}
+
+void AABaseWeapon::DecreaseAmmo()
+{
+
+    if (CurrentAmmo.Bullets == 0)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- No Bullets ---");
+        return;
+    }
+
+    --CurrentAmmo.Bullets;
+    LogAmmo();
+
+    if (IsClipsEmpty() && !IsAmmoEmpty())
+    {
+        StopFire();
+        OnClipEmpty.Broadcast();
+    }
+}
+
+bool AABaseWeapon::IsAmmoEmpty() const
+{
+    if (CurrentAmmo.Clips == 0)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- No Clips ---");
+    }
+    return CurrentAmmo.Clips == 0 && !CurrentAmmo.Infinite && IsClipsEmpty();
+}
+
+bool AABaseWeapon::IsClipsEmpty() const
+{
+    return CurrentAmmo.Bullets == 0;
+}
+
+void AABaseWeapon::ChangeClips()
+{
+    if (!CurrentAmmo.Infinite)
+    {
+        --CurrentAmmo.Clips;
+    }
+    CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- Change Clips ---");
+}
+
+bool AABaseWeapon::CanReload() const
+{
+    return CurrentAmmo.Bullets < DefaultAmmo.Bullets && CurrentAmmo.Clips > 0;
+}
+
+void AABaseWeapon::LogAmmo()
+{
+    FString Info = "Ammo Info: " + FString::FromInt(CurrentAmmo.Bullets) + "/";
+    Info += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
+
+    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, Info);
 }

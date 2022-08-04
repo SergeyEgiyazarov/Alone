@@ -77,6 +77,8 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     PlayerInputComponent->BindAction("Run", IE_Released, this, &AACharacter::StopRunning);
     PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UAWeaponComponent::StartFire);
     PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UAWeaponComponent::StopFire);
+    PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &UAWeaponComponent::NextWeapon);
+    PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &UAWeaponComponent::Reload);
 }
 
 void AACharacter::MoveForward(float Amount)
@@ -108,6 +110,7 @@ void AACharacter::OnDeath()
 {
     UE_LOG(CharacterLog, Display, TEXT("Player %s is dead."), *GetName());
     PlayAnimMontage(DeathAnimMontage);
+    HealthText->SetVisibility(false);
 
     GetCharacterMovement()->DisableMovement();
     SetLifeSpan(5.0f);
@@ -118,6 +121,7 @@ void AACharacter::OnDeath()
     }
 
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    WeaponComponent->StopFire();
 }
 
 void AACharacter::OnGroundLanded(const FHitResult& Hit)

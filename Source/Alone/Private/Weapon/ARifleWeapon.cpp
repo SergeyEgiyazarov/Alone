@@ -7,8 +7,8 @@
 
 void AARifleWeapon::StartFire()
 {
-    MakeShot();
     GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &AARifleWeapon::MakeShot, TimeBetweenShots, true);
+    MakeShot();
 }
 
 void AARifleWeapon::StopFire()
@@ -18,11 +18,19 @@ void AARifleWeapon::StopFire()
 
 void AARifleWeapon::MakeShot()
 {
-    if (!GetWorld()) return;
+    if (!GetWorld() || IsAmmoEmpty())
+    {
+        StopFire();
+        return;
+    }
 
     FVector TraceStart;
     FVector TraceEnd;
-    if (!GetTraceData(TraceStart, TraceEnd)) return;
+    if (!GetTraceData(TraceStart, TraceEnd))
+    {
+        StopFire();
+        return;
+    }
 
     FHitResult HitResult;
     MakeHit(HitResult, TraceStart, TraceEnd);
@@ -37,6 +45,8 @@ void AARifleWeapon::MakeShot()
     {
         DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 1.0f, 0, 2.0f);
     }
+
+    DecreaseAmmo();
 }
 
 bool AARifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const

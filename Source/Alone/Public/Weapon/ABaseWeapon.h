@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ACoreTypes.h"
 #include "ABaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
@@ -16,18 +17,26 @@ class ALONE_API AABaseWeapon : public AActor
 public:
     AABaseWeapon();
 
+    FOnClipEmptySignature OnClipEmpty;
+
     virtual void StartFire();
     virtual void StopFire();
+
+    void ChangeClips();
+    bool CanReload() const;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     FName MuzzleSocketName = "MuzzleFlash";
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     float TraceMaxDistance = 4000.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    FAmmoData DefaultAmmo{30, 10, false};
 
     virtual void BeginPlay() override;
 
@@ -38,4 +47,12 @@ protected:
     bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
     FVector GetMuzzleWorldLocation() const;
     void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
+
+    void DecreaseAmmo();
+    bool IsAmmoEmpty() const;
+    bool IsClipsEmpty() const;
+    void LogAmmo();
+
+private:
+    FAmmoData CurrentAmmo;
 };
