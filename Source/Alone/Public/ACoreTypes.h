@@ -2,7 +2,7 @@
 
 #include "ACoreTypes.generated.h"
 
-//Weapon
+// Weapon
 class AABaseWeapon;
 
 DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature);
@@ -34,7 +34,19 @@ struct FWeaponData
     UAnimMontage* RealoadAnimMontage;
 };
 
-//Health
+USTRUCT(BlueprintType)
+struct FWeaponUIData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* WeaponIcon;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* CrossHairIcon;
+};
+
+// Health
 
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);

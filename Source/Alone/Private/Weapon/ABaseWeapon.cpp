@@ -92,12 +92,12 @@ void AABaseWeapon::DecreaseAmmo()
 
     if (CurrentAmmo.Bullets == 0)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- No Bullets ---");
+        //GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- No Bullets ---");
         return;
     }
 
     --CurrentAmmo.Bullets;
-    LogAmmo();
+    //LogAmmo();
 
     if (IsClipsEmpty() && !IsAmmoEmpty())
     {
@@ -108,10 +108,10 @@ void AABaseWeapon::DecreaseAmmo()
 
 bool AABaseWeapon::IsAmmoEmpty() const
 {
-    if (CurrentAmmo.Clips == 0)
+    /*if (CurrentAmmo.Clips == 0)
     {
         GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- No Clips ---");
-    }
+    }*/
     return CurrentAmmo.Clips == 0 && !CurrentAmmo.Infinite && IsClipsEmpty();
 }
 
@@ -127,7 +127,7 @@ void AABaseWeapon::ChangeClips()
         --CurrentAmmo.Clips;
     }
     CurrentAmmo.Bullets = DefaultAmmo.Bullets;
-    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- Change Clips ---");
+    //GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "--- Change Clips ---");
 }
 
 bool AABaseWeapon::CanReload() const

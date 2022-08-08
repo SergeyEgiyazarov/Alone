@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Animations/AEquipFinichAnimNotify.h"
 #include "Animations/AReloadFinishedAnimNotify.h"
+#include "Animations/AEquipWeaponAnimNotify.h"
 #include "Animations/AnimUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(WeaponComponentLog, All, All);
@@ -74,7 +75,7 @@ void UAWeaponComponent::EquipWeapon(int32 WeaponIndex)
 
     if (CurrentWeapon)
     {
-        CurrentWeapon->StopFire();
+        //CurrentWeapon->StopFire();
         AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
     }
 
@@ -88,8 +89,6 @@ void UAWeaponComponent::EquipWeapon(int32 WeaponIndex)
     CurrentReloadAnimMontage = CurrentWeaponDate ? CurrentWeaponDate->RealoadAnimMontage : nullptr;
 
     AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
-    EquipAnimInProgress = true;
-    PlayAnimMontage(EquipAnimMontage);
 }
 
 void UAWeaponComponent::StartFire()
@@ -107,8 +106,16 @@ void UAWeaponComponent::StopFire()
 void UAWeaponComponent::NextWeapon()
 {
     if (!CanEquip()) return;
+
     CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
-    EquipWeapon(CurrentWeaponIndex);
+    StartEquipWeapon();
+}
+
+void UAWeaponComponent::StartEquipWeapon()
+{
+    EquipAnimInProgress = true;
+    CurrentWeapon->StopFire();
+    PlayAnimMontage(EquipAnimMontage);
 }
 
 void UAWeaponComponent::Reload()
@@ -126,6 +133,17 @@ void UAWeaponComponent::PlayAnimMontage(UAnimMontage* Animation)
 
 void UAWeaponComponent::InitAnimations()
 {
+    auto EquipWeaponNotify = AnimUtils::FindNotifyByClass<UAEquipWeaponAnimNotify>(EquipAnimMontage);
+    if (EquipWeaponNotify)
+    {
+        EquipWeaponNotify->OnNotified.AddUObject(this, &UAWeaponComponent::OnChangeWeapon);
+    }
+    else
+    {
+        UE_LOG(WeaponComponentLog, Error, TEXT("Equip weapon anim notify is empty"));
+        checkNoEntry();
+    }
+
     auto EquipFinishedNotify = AnimUtils::FindNotifyByClass<UAEquipFinichAnimNotify>(EquipAnimMontage);
     if (EquipFinishedNotify)
     {
@@ -148,6 +166,14 @@ void UAWeaponComponent::InitAnimations()
 
         ReloadFinishedNotify->OnNotified.AddUObject(this, &UAWeaponComponent::OnReloadFinished);
     }
+}
+
+void UAWeaponComponent::OnChangeWeapon(USkeletalMeshComponent* MeshComp)
+{
+    const auto Character = Cast<ACharacter>(GetOwner());
+    if (!Character || Character->GetMesh() != MeshComp) return;
+
+    EquipWeapon(CurrentWeaponIndex);
 }
 
 void UAWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
@@ -193,4 +219,24 @@ void UAWeaponComponent::ChangeClip()
     CurrentWeapon->ChangeClips();
     ReloadAnimInProgress = true;
     PlayAnimMontage(CurrentReloadAnimMontage);
+}
+
+bool UAWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
+{
+    if (CurrentWeapon)
+    {
+        UIData = CurrentWeapon->GetUIData();
+        return true;
+    }
+    return false;
+}
+
+bool UAWeaponComponent::GetWeaponAmmoData(FAmmoData& AmmoData) const
+{
+    if (CurrentWeapon)
+    {
+        AmmoData = CurrentWeapon->GetAmmoData();
+        return true;
+    }
+    return false;
 }
