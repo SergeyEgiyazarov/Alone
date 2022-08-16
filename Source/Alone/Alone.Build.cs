@@ -17,7 +17,8 @@ public class Alone : ModuleRules
 			"Alone/Public/Components", 
 			"Alone/Public/Weapon",
 			"Alone/Public/UI",
-			"Alone/Public/Animations"
+			"Alone/Public/Animations",
+			"Alone/Public/Pickups"
 		});
 
 		// Uncomment if you are using Slate UI

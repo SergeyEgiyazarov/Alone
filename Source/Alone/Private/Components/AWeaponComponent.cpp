@@ -240,3 +240,15 @@ bool UAWeaponComponent::GetWeaponAmmoData(FAmmoData& AmmoData) const
     }
     return false;
 }
+
+bool UAWeaponComponent::TryToAddAmmo(TSubclassOf<AABaseWeapon> WeaponType, int32 AmmoAmount)
+{
+    for (const auto Weapon : Weapons)
+    {
+        if (Weapon && Weapon->IsA(WeaponType))
+        {
+            return Weapon->TryToAddAmmo(AmmoAmount);
+        }
+    }
+    return false;
+}

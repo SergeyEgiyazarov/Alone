@@ -35,6 +35,8 @@ public:
         return CurrentAmmo;
     }
 
+    bool TryToAddAmmo(int32 AmmoAmount);
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
@@ -46,7 +48,7 @@ protected:
     float TraceMaxDistance = 4000.0f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-    FAmmoData DefaultAmmo{30, 10, false};
+    FAmmoData DefaultAmmo{30, 150, false};
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FWeaponUIData UIData;
@@ -64,6 +66,8 @@ protected:
     void DecreaseAmmo();
     bool IsAmmoEmpty() const;
     bool IsClipsEmpty() const;
+    bool IsAmmoFull() const;
+
     void LogAmmo();
 
 private:
