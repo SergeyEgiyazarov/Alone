@@ -8,7 +8,14 @@ public class Alone : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { 
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"InputCore",
+			"Niagara",
+			"PhysicsCore"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
@@ -18,7 +25,8 @@ public class Alone : ModuleRules
 			"Alone/Public/Weapon",
 			"Alone/Public/UI",
 			"Alone/Public/Animations",
-			"Alone/Public/Pickups"
+			"Alone/Public/Pickups",
+			"Alone/Public/Weapon/Components"
 		});
 
 		// Uncomment if you are using Slate UI

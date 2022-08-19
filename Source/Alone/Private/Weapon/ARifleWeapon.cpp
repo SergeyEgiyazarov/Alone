@@ -4,6 +4,19 @@
 #include "Weapon/ARifleWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Weapon/Components/AWeaponFXComponent.h"
+
+AARifleWeapon::AARifleWeapon()
+{
+    WeaponFXComponent = CreateDefaultSubobject<UAWeaponFXComponent>("WeaponFXComponent");
+}
+
+void AARifleWeapon::BeginPlay()
+{
+    Super::BeginPlay();
+
+    check(WeaponFXComponent);
+}
 
 void AARifleWeapon::StartFire()
 {
@@ -44,8 +57,9 @@ void AARifleWeapon::MakeShot()
     if (HitResult.bBlockingHit)
     {
         MakeDamage(HitResult);
-        DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 1.0f, 0, 2.0f);
-        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 2.0f);
+        //DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 1.0f, 0, 2.0f);
+        //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 2.0f);
+        WeaponFXComponent->PlayImpactFX(HitResult);
     }
     else
     {
