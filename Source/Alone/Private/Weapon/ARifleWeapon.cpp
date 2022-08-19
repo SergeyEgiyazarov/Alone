@@ -24,6 +24,12 @@ void AARifleWeapon::MakeShot()
         return;
     }
 
+    if (IsClipsEmpty())
+    {
+        OnClipEmpty.Broadcast(this);
+        return;
+    }
+
     FVector TraceStart;
     FVector TraceEnd;
     if (!GetTraceData(TraceStart, TraceEnd))

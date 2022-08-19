@@ -72,6 +72,6 @@ private:
     bool CanEquip() const;
     bool CanReload() const;
 
-    void OnClipEmpty();
+    void OnClipEmpty(AABaseWeapon* AmmoEmptyWeapon);
     void ChangeClip();
 };

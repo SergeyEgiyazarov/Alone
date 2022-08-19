@@ -52,6 +52,9 @@ public:
         return Health / MaxHealth;
     }
 
+    bool TryToAddHealth(float HealthAmount);
+    bool IsHealthFull() const;
+
     FOnDeath OnDeath;
     FOnHealthChanged OnHealthChanged;
 

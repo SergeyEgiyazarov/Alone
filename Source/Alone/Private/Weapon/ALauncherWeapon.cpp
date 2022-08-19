@@ -13,6 +13,12 @@ void AALauncherWeapon::MakeShot()
 {
     if (!GetWorld() || IsAmmoEmpty()) return;
 
+    if (IsClipsEmpty())
+    {
+        OnClipEmpty.Broadcast(this);
+        return;
+    }
+
     FVector TraceStart;
     FVector TraceEnd;
     if (!GetTraceData(TraceStart, TraceEnd)) return;

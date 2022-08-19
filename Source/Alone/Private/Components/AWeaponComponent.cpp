@@ -207,9 +207,14 @@ bool UAWeaponComponent::CanReload() const
     return (CurrentWeapon && !EquipAnimInProgress && !ReloadAnimInProgress && CurrentWeapon->CanReload());
 }
 
-void UAWeaponComponent::OnClipEmpty()
+void UAWeaponComponent::OnClipEmpty(AABaseWeapon* AmmoEmptyWeapon)
 {
-    ChangeClip();
+    if (!AmmoEmptyWeapon) return;
+
+    if (AmmoEmptyWeapon == CurrentWeapon)
+    {
+        ChangeClip();
+    }
 }
 
 void UAWeaponComponent::ChangeClip()

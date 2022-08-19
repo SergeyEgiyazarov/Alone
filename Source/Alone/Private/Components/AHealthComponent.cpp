@@ -61,3 +61,16 @@ void UAHealthComponent::SetHealth(float NewHealth)
     Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
     OnHealthChanged.Broadcast(Health);
 }
+
+bool UAHealthComponent::TryToAddHealth(float HealthAmount)
+{
+    if (IsDead() || IsHealthFull()) return false;
+
+    SetHealth(Health + HealthAmount);
+    return true;
+}
+
+bool UAHealthComponent::IsHealthFull() const
+{
+    return FMath::IsNearlyEqual(Health, MaxHealth);
+}

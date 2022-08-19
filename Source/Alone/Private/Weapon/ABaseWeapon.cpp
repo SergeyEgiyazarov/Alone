@@ -30,17 +30,14 @@ void AABaseWeapon::BeginPlay()
 
 void AABaseWeapon::StartFire()
 {
-
 }
 
 void AABaseWeapon::StopFire()
 {
-
 }
 
 void AABaseWeapon::MakeShot()
 {
-
 }
 
 APlayerController* AABaseWeapon::GetPlayerController() const
@@ -97,7 +94,7 @@ void AABaseWeapon::DecreaseAmmo()
     if (IsClipsEmpty() && !IsAmmoEmpty())
     {
         StopFire();
-        OnClipEmpty.Broadcast();
+        OnClipEmpty.Broadcast(this);
     }
 }
 
@@ -160,7 +157,7 @@ bool AABaseWeapon::TryToAddAmmo(int32 AmmoAmount)
     if (IsAmmoEmpty())
     {
         CurrentAmmo.BulletsInInventory = FMath::Clamp(AmmoAmount, 0, DefaultAmmo.BulletsInInventory);
-        OnClipEmpty.Broadcast();
+        OnClipEmpty.Broadcast(this);
     }
     else if (CurrentAmmo.BulletsInInventory < DefaultAmmo.BulletsInInventory)
     {
