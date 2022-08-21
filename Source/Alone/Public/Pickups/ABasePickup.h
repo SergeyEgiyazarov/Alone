@@ -27,5 +27,7 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 private:
+    float RotationYaw = 1.0f;
+
     virtual bool GivePickupTo(APawn* PlayerPawn);
 };
