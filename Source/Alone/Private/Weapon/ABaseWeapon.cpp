@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Controller.h"
+#include "NiagaraFunctionLibrary.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseWeaponLog, All, All);
 
@@ -178,4 +179,14 @@ bool AABaseWeapon::TryToAddAmmo(int32 AmmoAmount)
     }
 
     return true;
+}
+
+void AABaseWeapon::SpawnMuzzleFX()
+{
+    UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, //
+        WeaponMesh,                                        //
+        MuzzleSocketName,                                  //
+        FVector::ZeroVector,                               //
+        FRotator::ZeroRotator,                             //
+        EAttachLocation::SnapToTarget, true);
 }

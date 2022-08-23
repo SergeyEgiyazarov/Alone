@@ -7,6 +7,7 @@
 #include "ARifleWeapon.generated.h"
 
 class UAWeaponFXComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class ALONE_API AARifleWeapon : public AABaseWeapon
@@ -29,6 +30,12 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     float DamageAmount = 10.0f;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* TraceFX;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    FString TraceTargetName = "TraceTarget";
+
     UPROPERTY(VisibleAnywhere, Category = "VFX")
     UAWeaponFXComponent* WeaponFXComponent;
 
@@ -40,4 +47,6 @@ protected:
 
 private:
     FTimerHandle ShotTimerHandle;
+
+    void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
 };

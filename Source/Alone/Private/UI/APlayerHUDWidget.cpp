@@ -5,6 +5,25 @@
 #include "Components/AWeaponComponent.h"
 #include "AUtils.h"
 
+bool UAPlayerHUDWidget::Initialize()
+{
+    const auto HealthComponent = AUtils::GetAPlayerComponent<UAHealthComponent>(GetOwningPlayerPawn());
+    if (HealthComponent)
+    {
+        HealthComponent->OnHealthChanged.AddUObject(this, &UAPlayerHUDWidget::OnHealthChange);
+    }
+
+    return Super::Initialize();
+}
+
+void UAPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)
+{
+    if (HealthDelta < 0.0f)
+    {
+        OnTakeDamage();
+    }
+}
+
 float UAPlayerHUDWidget::GetHealthPercent() const
 {
     const auto HealthComponent = AUtils::GetAPlayerComponent<UAHealthComponent>(GetOwningPlayerPawn());

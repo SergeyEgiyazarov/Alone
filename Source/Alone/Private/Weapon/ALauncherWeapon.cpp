@@ -40,4 +40,5 @@ void AALauncherWeapon::MakeShot()
     }
 
     DecreaseAmmo();
+    SpawnMuzzleFX();
 }

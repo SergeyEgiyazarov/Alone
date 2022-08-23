@@ -2,6 +2,9 @@
 
 #include "Components/AHealthComponent.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/Controller.h"
+#include "Camera/CameraShakeBase.h"
 
 // Sets default values for this component's properties
 UAHealthComponent::UAHealthComponent()
@@ -44,6 +47,8 @@ void UAHealthComponent::OnTakeAnyDamage(
     {
         GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this, &UAHealthComponent::HealUpdate, HealUpdateTime, true, HealDelay);
     }
+
+    PlayCameraShake();
 }
 
 void UAHealthComponent::HealUpdate()
@@ -58,8 +63,11 @@ void UAHealthComponent::HealUpdate()
 
 void UAHealthComponent::SetHealth(float NewHealth)
 {
-    Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
-    OnHealthChanged.Broadcast(Health);
+    const auto NextHealth = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
+    const auto HealthDelta = NextHealth - Health;
+
+    Health = NextHealth;
+    OnHealthChanged.Broadcast(Health, HealthDelta);
 }
 
 bool UAHealthComponent::TryToAddHealth(float HealthAmount)
@@ -73,4 +81,17 @@ bool UAHealthComponent::TryToAddHealth(float HealthAmount)
 bool UAHealthComponent::IsHealthFull() const
 {
     return FMath::IsNearlyEqual(Health, MaxHealth);
+}
+
+void UAHealthComponent::PlayCameraShake()
+{
+    if (IsDead()) return;
+
+    const auto Player = Cast<APawn>(GetOwner());
+    if (!Player) return;
+
+    const auto Controller = Player->GetController<APlayerController>();
+    if (!Controller || !Controller->PlayerCameraManager) return;
+
+    Controller->PlayerCameraManager->StartCameraShake(CameraShake);
 }

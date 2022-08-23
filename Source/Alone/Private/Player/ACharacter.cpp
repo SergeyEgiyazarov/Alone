@@ -43,14 +43,14 @@ void AACharacter::BeginPlay()
     check(HealthComponent);
     check(HealthText);
 
-    OnHealthChanged(HealthComponent->GetHealth());
+    OnHealthChanged(HealthComponent->GetHealth(), 0.0f);
     HealthComponent->OnDeath.AddUObject(this, &AACharacter::OnDeath);
     HealthComponent->OnHealthChanged.AddUObject(this, &AACharacter::OnHealthChanged);
 
     LandedDelegate.AddDynamic(this, &AACharacter::OnGroundLanded);
 }
 
-void AACharacter::OnHealthChanged(float Health)
+void AACharacter::OnHealthChanged(float Health, float HealthDelta)
 {
     HealthText->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
