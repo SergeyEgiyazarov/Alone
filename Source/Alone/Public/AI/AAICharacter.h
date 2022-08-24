@@ -6,6 +6,8 @@
 #include "Player/ACharacter.h"
 #include "AAICharacter.generated.h"
 
+class UBehaviorTree;
+
 UCLASS()
 class ALONE_API AAAICharacter : public AACharacter
 {
@@ -13,4 +15,7 @@ class ALONE_API AAAICharacter : public AACharacter
 
 public:
     AAAICharacter(const FObjectInitializer& ObjInit);
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
+    UBehaviorTree* BehaviorTreeAsset;
 };

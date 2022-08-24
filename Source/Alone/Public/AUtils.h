@@ -4,7 +4,7 @@ class AUtils
 {
 public:
     template <typename T>
-    static T* GetAPlayerComponent(APawn* PlayerPawn)
+    static T* GetAPlayerComponent(AActor* PlayerPawn)
     {
         if (!PlayerPawn) return nullptr;
 
