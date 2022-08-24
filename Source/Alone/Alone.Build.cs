@@ -14,7 +14,9 @@ public class Alone : ModuleRules
 			"Engine",
 			"InputCore",
 			"Niagara",
-			"PhysicsCore"
+			"PhysicsCore",
+			"GameplayTasks",
+			"NavigationSystem"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
@@ -26,7 +28,9 @@ public class Alone : ModuleRules
 			"Alone/Public/UI",
 			"Alone/Public/Animations",
 			"Alone/Public/Pickups",
-			"Alone/Public/Weapon/Components"
+			"Alone/Public/Weapon/Components",
+			"Alone/Public/AI",
+			"Alone/Public/AI/Tasks"
 		});
 
 		// Uncomment if you are using Slate UI
