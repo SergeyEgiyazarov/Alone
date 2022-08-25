@@ -30,7 +30,8 @@ public class Alone : ModuleRules
 			"Alone/Public/Pickups",
 			"Alone/Public/Weapon/Components",
 			"Alone/Public/AI",
-			"Alone/Public/AI/Tasks"
+			"Alone/Public/AI/Tasks",
+			"Alone/Public/AI/Services"
 		});
 
 		// Uncomment if you are using Slate UI

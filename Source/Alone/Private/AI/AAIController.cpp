@@ -3,6 +3,7 @@
 #include "AI/AAIController.h"
 #include "AI/AAICharacter.h"
 #include "Components/AAIPerceptionComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 AAAIController::AAAIController()
 {
@@ -25,6 +26,12 @@ void AAAIController::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    const auto AimActor = AAIPerceptionComponent->GetClosestEnemy();
+    const auto AimActor = GetFocuseOnActor();
     SetFocus(AimActor);
+}
+
+AActor* AAAIController::GetFocuseOnActor() const
+{
+    if (!GetBlackboardComponent()) return nullptr;
+    return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocuseOnKeyName));
 }
