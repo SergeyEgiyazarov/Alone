@@ -36,6 +36,7 @@ public:
     }
 
     bool TryToAddAmmo(int32 AmmoAmount);
+    bool IsAmmoEmpty() const;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -67,7 +68,6 @@ protected:
     void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 
     void DecreaseAmmo();
-    bool IsAmmoEmpty() const;
     bool IsClipsEmpty() const;
     bool IsAmmoFull() const;
 

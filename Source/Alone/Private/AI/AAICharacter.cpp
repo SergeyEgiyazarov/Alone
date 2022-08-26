@@ -3,8 +3,10 @@
 #include "AI/AAICharacter.h"
 #include "AI/AAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/AAIWeaponComponent.h"
 
-AAAICharacter::AAAICharacter(const FObjectInitializer& ObjInit) : Super(ObjInit)
+AAAICharacter::AAAICharacter(const FObjectInitializer& ObjInit)
+    : Super(ObjInit.SetDefaultSubobjectClass<UAAIWeaponComponent>("WeaponComponent"))
 {
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
     AIControllerClass = AAAIController::StaticClass();

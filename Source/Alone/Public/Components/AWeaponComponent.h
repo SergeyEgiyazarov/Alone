@@ -17,9 +17,9 @@ class ALONE_API UAWeaponComponent : public UActorComponent
 public:
     UAWeaponComponent();
 
-    void StartFire();
+    virtual void StartFire();
     void StopFire();
-    void NextWeapon();
+    virtual void NextWeapon();
     void Reload();
 
     bool GetWeaponUIData(FWeaponUIData& UIData) const;
@@ -40,27 +40,31 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* EquipAnimMontage;
 
-    virtual void BeginPlay() override;
-    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-private:
     UPROPERTY()
     AABaseWeapon* CurrentWeapon = nullptr;
 
     UPROPERTY()
     TArray<AABaseWeapon*> Weapons;
 
+    int32 CurrentWeaponIndex = 0;
+
+    virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+    bool CanFire() const;
+    bool CanEquip() const;
+    void StartEquipWeapon();
+    void EquipWeapon(int32 WeaponIndex);
+
+private:
     UPROPERTY()
     UAnimMontage* CurrentReloadAnimMontage = nullptr;
 
-    int32 CurrentWeaponIndex = 0;
     bool EquipAnimInProgress = false;
     bool ReloadAnimInProgress = false;
 
     void SpawnWeapons();
     void AttachWeaponToSocket(AABaseWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName);
-    void StartEquipWeapon();
-    void EquipWeapon(int32 WeaponIndex);
 
     void PlayAnimMontage(UAnimMontage* Animation);
     void InitAnimations();
@@ -68,8 +72,6 @@ private:
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
     void OnReloadFinished(USkeletalMeshComponent* MeshComp);
 
-    bool CanFire() const;
-    bool CanEquip() const;
     bool CanReload() const;
 
     void OnClipEmpty(AABaseWeapon* AmmoEmptyWeapon);
