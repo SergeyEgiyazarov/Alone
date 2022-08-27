@@ -19,6 +19,8 @@ AABasePickup::AABasePickup()
 void AABasePickup::BeginPlay()
 {
     Super::BeginPlay();
+
+    check(CollisionComponent);
 }
 
 void AABasePickup::Tick(float DeltaTime)
@@ -34,7 +36,7 @@ void AABasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
     const auto Pawn = Cast<APawn>(OtherActor);
     if (GivePickupTo(Pawn))
     {
-        Destroy();
+        PickupWasTaken();
     }
 
 }
@@ -42,4 +44,28 @@ void AABasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
 bool AABasePickup::GivePickupTo(APawn* PlayerPawn)
 {
     return false;
+}
+
+void AABasePickup::PickupWasTaken()
+{
+    CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    if (GetRootComponent())
+    {
+        GetRootComponent()->SetVisibility(false, true);
+    }
+    GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &AABasePickup::Respawn, RespawnTime);
+}
+
+void AABasePickup::Respawn()
+{
+    CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    if (GetRootComponent())
+    {
+        GetRootComponent()->SetVisibility(true, true);
+    }
+}
+
+bool AABasePickup::CouldBeTaken() const
+{
+    return !GetWorldTimerManager().IsTimerActive(RespawnTimerHandle);
 }
