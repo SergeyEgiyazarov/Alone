@@ -16,6 +16,8 @@ void AAloneGameModeBase::StartPlay()
     Super::StartPlay();
 
     SpawnBots();
+    CurrentRound = 1;
+    StartRound();
 }
 
 UClass* AAloneGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -38,5 +40,29 @@ void AAloneGameModeBase::SpawnBots()
 
         const auto AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo);
         RestartPlayer(AIController);
+    }
+}
+
+void AAloneGameModeBase::StartRound()
+{
+    RoundCountDown = GameData.RoundTime;
+    GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &AAloneGameModeBase::GameTimerUpdate, 1.0f, true);
+}
+
+void AAloneGameModeBase::GameTimerUpdate()
+{
+    if (--RoundCountDown <= 0)
+    {
+        GetWorldTimerManager().ClearTimer(GameRoundTimerHandle);
+
+        if (CurrentRound + 1 <= GameData.RoundNum)
+        {
+            ++CurrentRound;
+            StartRound();
+        }
+        else
+        {
+            // GameOver
+        }
     }
 }
