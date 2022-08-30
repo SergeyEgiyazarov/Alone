@@ -69,6 +69,7 @@ void AAloneGameModeBase::GameTimerUpdate()
         else
         {
             UE_LOG(LogAGameModeBase, Display, TEXT("Game Over!"));
+            LogPlayerInfo();
         }
     }
 }
@@ -114,7 +115,7 @@ void AAloneGameModeBase::CreateTeamsInfo()
     }
 }
 
-FLinearColor AAloneGameModeBase::DetermineColorByTeamID(int32 ID) const 
+FLinearColor AAloneGameModeBase::DetermineColorByTeamID(int32 ID) const
 {
     if (ID - 1 < GameData.TeamColors.Num())
     {
@@ -124,7 +125,7 @@ FLinearColor AAloneGameModeBase::DetermineColorByTeamID(int32 ID) const
     return GameData.DefaultTeamColor;
 }
 
-void AAloneGameModeBase::SetPlayerColor(AController* Controller) 
+void AAloneGameModeBase::SetPlayerColor(AController* Controller)
 {
     if (!Controller) return;
 
@@ -135,4 +136,37 @@ void AAloneGameModeBase::SetPlayerColor(AController* Controller)
     if (!PlayerState) return;
 
     Character->SetPlayerColor(PlayerState->GetTeamColor());
+}
+
+void AAloneGameModeBase::Killed(AController* KillerController, AController* VictimController)
+{
+    const auto KillerPlayerState = KillerController ? Cast<AAPlayerState>(KillerController->PlayerState) : nullptr;
+    const auto VictimPlayerState = VictimController ? Cast<AAPlayerState>(VictimController->PlayerState) : nullptr;
+
+    if (KillerPlayerState)
+    {
+        KillerPlayerState->AddKill();
+    }
+
+    if (VictimPlayerState)
+    {
+        VictimPlayerState->AddDeath();
+    }
+}
+
+void AAloneGameModeBase::LogPlayerInfo()
+{
+    if (!GetWorld()) return;
+
+    int32 TeamID = 1;
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        const auto Controller = It->Get();
+        if (!Controller) continue;
+
+        const auto PlayerState = Cast<AAPlayerState>(Controller->PlayerState);
+        if (!PlayerState) continue;
+
+        PlayerState->LogInfo();
+    }
 }

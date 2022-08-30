@@ -5,6 +5,8 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraShakeBase.h"
+#include "Engine/World.h"
+#include "Alone/AloneGameModeBase.h"
 
 // Sets default values for this component's properties
 UAHealthComponent::UAHealthComponent()
@@ -41,6 +43,7 @@ void UAHealthComponent::OnTakeAnyDamage(
 
     if (IsDead())
     {
+        Killed(InstigatedBy);
         OnDeath.Broadcast();
     }
     else if (AutoHeal)
@@ -94,4 +97,17 @@ void UAHealthComponent::PlayCameraShake()
     if (!Controller || !Controller->PlayerCameraManager) return;
 
     Controller->PlayerCameraManager->StartCameraShake(CameraShake);
+}
+
+void UAHealthComponent::Killed(AController* KillerController)
+{
+    if (!GetWorld()) return;
+
+    const auto GameMode = Cast<AAloneGameModeBase>(GetWorld()->GetAuthGameMode());
+    if (!GameMode) return;
+
+    const auto Player = Cast<APawn>(GetOwner());
+    const auto VictimController = Player ? Player->Controller : nullptr;
+
+    GameMode->Killed(KillerController, VictimController);
 }
