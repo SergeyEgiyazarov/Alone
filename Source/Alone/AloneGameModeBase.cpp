@@ -58,6 +58,7 @@ void AAloneGameModeBase::GameTimerUpdate()
         if (CurrentRound + 1 <= GameData.RoundNum)
         {
             ++CurrentRound;
+            ResetPlayers();
             StartRound();
         }
         else
@@ -65,4 +66,23 @@ void AAloneGameModeBase::GameTimerUpdate()
             // GameOver
         }
     }
+}
+
+void AAloneGameModeBase::ResetPlayers()
+{
+    if (!GetWorld()) return;
+
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        ResetOnePlayer(It->Get());
+    }
+}
+
+void AAloneGameModeBase::ResetOnePlayer(AController* Controller)
+{
+    if (Controller && Controller->GetPawn())
+    {
+        Controller->GetPawn()->Reset();
+    }
+    RestartPlayer(Controller);
 }

@@ -18,5 +18,5 @@ bool UAHealthPercentDecorator::CalculateRawConditionValue(UBehaviorTreeComponent
     const auto HealthComponent = AUtils::GetAPlayerComponent<UAHealthComponent>(Controller->GetPawn());
     if (!HealthComponent || HealthComponent->IsDead()) return false;
 
-    return HealthComponent->GetHealthPercent() <= HealthPercent && Probability > 0 && FMath::FRand() <= Probability;
+    return HealthComponent->GetHealthPercent() <= HealthPercent;
 }

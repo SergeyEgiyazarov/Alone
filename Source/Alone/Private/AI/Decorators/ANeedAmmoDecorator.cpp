@@ -19,5 +19,5 @@ bool UANeedAmmoDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& Own
     const auto WeaponComponent = AUtils::GetAPlayerComponent<UAWeaponComponent>(Controller->GetPawn());
     if (!WeaponComponent) return false;
 
-    return WeaponComponent->NeedAmmo(WeaponType) && Probability > 0 && FMath::FRand() <= Probability;
+    return WeaponComponent->NeedAmmo(WeaponType);
 }

@@ -15,9 +15,6 @@ public:
     UAHealthPercentDecorator();
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (ClampMin = "0.01", ClampMax = "1.0"))
-    float Probability = 0.7f;
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     float HealthPercent = 0.4f;
 

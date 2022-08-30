@@ -9,6 +9,8 @@ AAAIController::AAAIController()
 {
     AAIPerceptionComponent = CreateDefaultSubobject<UAAIPerceptionComponent>("AIPerceptionComponent");
     SetPerceptionComponent(*AAIPerceptionComponent);
+
+    bWantsPlayerState = true;
 }
 
 void AAAIController::OnPossess(APawn* InPawn)
