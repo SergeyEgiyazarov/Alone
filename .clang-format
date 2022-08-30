@@ -1,3 +1,4 @@
+Language: Cpp
 BasedOnStyle: Microsoft
 IndentWidth: 4
 UseTab: Never
@@ -14,7 +15,7 @@ SortIncludes: false
 ObjCBinPackProtocolList: Auto
 AllowShortBlocksOnASingleLine: false
 AlignAfterOpenBracket: DontAlign
-AllowShortFunctionsOnASingleLine: None
+AllowShortFunctionsOnASingleLine: Inline
 PointerAlignment: Left
 AllowShortIfStatementsOnASingleLine: true
 SpacesBeforeTrailingComments: 1

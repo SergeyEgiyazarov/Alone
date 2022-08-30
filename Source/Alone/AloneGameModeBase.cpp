@@ -4,11 +4,15 @@
 #include "Player/ACharacter.h"
 #include "UI/AGameHUD.h"
 #include "AIController.h"
+#include "Player/APlayerState.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogAGameModeBase, All, All);
 
 AAloneGameModeBase::AAloneGameModeBase()
 {
     DefaultPawnClass = AACharacter::StaticClass();
     HUDClass = AAGameHUD::StaticClass();
+    PlayerStateClass = AAPlayerState::StaticClass();
 }
 
 void AAloneGameModeBase::StartPlay()
@@ -16,6 +20,7 @@ void AAloneGameModeBase::StartPlay()
     Super::StartPlay();
 
     SpawnBots();
+    CreateTeamsInfo();
     CurrentRound = 1;
     StartRound();
 }
@@ -63,7 +68,7 @@ void AAloneGameModeBase::GameTimerUpdate()
         }
         else
         {
-            // GameOver
+            UE_LOG(LogAGameModeBase, Display, TEXT("Game Over!"));
         }
     }
 }
@@ -85,4 +90,49 @@ void AAloneGameModeBase::ResetOnePlayer(AController* Controller)
         Controller->GetPawn()->Reset();
     }
     RestartPlayer(Controller);
+    SetPlayerColor(Controller);
+}
+
+void AAloneGameModeBase::CreateTeamsInfo()
+{
+    if (!GetWorld()) return;
+
+    int32 TeamID = 1;
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        const auto Controller = It->Get();
+        if (!Controller) continue;
+
+        const auto PlayerState = Cast<AAPlayerState>(Controller->PlayerState);
+        if (!PlayerState) continue;
+
+        PlayerState->SetTeamID(TeamID);
+        PlayerState->SetTeamColor(DetermineColorByTeamID(TeamID));
+        SetPlayerColor(Controller);
+
+        TeamID = TeamID == 1 ? 2 : 1;
+    }
+}
+
+FLinearColor AAloneGameModeBase::DetermineColorByTeamID(int32 ID) const 
+{
+    if (ID - 1 < GameData.TeamColors.Num())
+    {
+        return GameData.TeamColors[ID - 1];
+    }
+    UE_LOG(LogAGameModeBase, Warning, TEXT("No color for team id: %i, set default: %s"), ID, *GameData.DefaultTeamColor.ToString());
+    return GameData.DefaultTeamColor;
+}
+
+void AAloneGameModeBase::SetPlayerColor(AController* Controller) 
+{
+    if (!Controller) return;
+
+    const auto Character = Cast<AACharacter>(Controller->GetPawn());
+    if (!Character) return;
+
+    const auto PlayerState = Cast<AAPlayerState>(Controller->PlayerState);
+    if (!PlayerState) return;
+
+    Character->SetPlayerColor(PlayerState->GetTeamColor());
 }
