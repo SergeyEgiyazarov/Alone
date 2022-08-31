@@ -21,6 +21,9 @@ public:
     virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 
     void Killed(AController* KillerController, AController* VictimController);
+    int32 GetCurrentRound() { return CurrentRound; }
+    FGameData& GetGameData() { return GameData; }
+    int32 GetRoundSecondRemaining() { return RoundCountDown; }
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
