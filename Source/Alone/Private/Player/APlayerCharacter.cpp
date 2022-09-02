@@ -4,9 +4,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/AWeaponComponent.h"
+#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 
-AAPlayerCharacter::AAPlayerCharacter(const FObjectInitializer& ObjInit)
-    : Super(ObjInit)
+AAPlayerCharacter::AAPlayerCharacter(const FObjectInitializer& ObjInit) : Super(ObjInit)
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -18,6 +19,34 @@ AAPlayerCharacter::AAPlayerCharacter(const FObjectInitializer& ObjInit)
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
     CameraComponent->SetupAttachment(SpringArmComponent);
+
+    CameraCollisionComponent = CreateDefaultSubobject<USphereComponent>("CameraCollisionComponent");
+    CameraCollisionComponent->SetupAttachment(CameraComponent);
+    CameraCollisionComponent->SetSphereRadius(10.0f);
+    CameraCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+}
+
+
+void AAPlayerCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    check(CameraCollisionComponent);
+    CameraCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AAPlayerCharacter::OnCameraCollisionBeginOverlap);
+    CameraCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &AAPlayerCharacter::OnCameraCollisionEndOverlap);
+}
+
+void AAPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    CheckCameraOverlap();
+}
+
+
+void AAPlayerCharacter::OnCameraCollisionEndOverlap(
+    UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    CheckCameraOverlap();
 }
 
 // Called to bind functionality to input
@@ -72,5 +101,23 @@ void AAPlayerCharacter::OnDeath()
     if (Controller)
     {
         Controller->ChangeState(NAME_Spectating);
+    }
+}
+
+void AAPlayerCharacter::CheckCameraOverlap()
+{
+    const auto HideMesh = CameraCollisionComponent->IsOverlappingComponent(GetCapsuleComponent());
+    GetMesh()->SetOwnerNoSee(HideMesh);
+
+    TArray<USceneComponent*> MeshChildren;
+    GetMesh()->GetChildrenComponents(true, MeshChildren);
+
+    for (const auto MeshChild : MeshChildren)
+    {
+        const auto MeshChildGeometry = Cast<UPrimitiveComponent>(MeshChild);
+        if (MeshChildGeometry)
+        {
+            MeshChildGeometry->SetOwnerNoSee(HideMesh);
+        }
     }
 }
