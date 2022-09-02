@@ -29,3 +29,8 @@ void UARespawnComponent::RespawnTimerUpdate()
         GameMode->RespawnRequest(Cast<AController>(GetOwner()));
     }
 }
+
+bool UARespawnComponent::IsRespawnIsProgress() const
+{
+    return GetWorld() && GetWorld()->GetTimerManager().IsTimerActive(RespawnTimerHandle);
+}
