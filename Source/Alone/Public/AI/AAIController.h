@@ -7,6 +7,7 @@
 #include "AAIController.generated.h"
 
 class UAAIPerceptionComponent;
+class UARespawnComponent;
 
 UCLASS()
 class ALONE_API AAAIController : public AAIController
@@ -19,6 +20,9 @@ public:
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
     UAAIPerceptionComponent* AAIPerceptionComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    UARespawnComponent* RespawnComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     FName FocuseOnKeyName = "EnemyActor";

@@ -25,6 +25,8 @@ public:
     FGameData& GetGameData() { return GameData; }
     int32 GetRoundSecondRemaining() { return RoundCountDown; }
 
+    void RespawnRequest(AController* Controller);
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<AAIController> AIControllerClass;
@@ -50,6 +52,8 @@ private:
     void CreateTeamsInfo();
     FLinearColor DetermineColorByTeamID(int32 ID) const;
     void SetPlayerColor(AController* Controller);
+
+    void StartRespawn(AController* Controller);
 
     void LogPlayerInfo();
 };

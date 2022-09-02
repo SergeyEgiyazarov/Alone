@@ -3,12 +3,15 @@
 #include "AI/AAIController.h"
 #include "AI/AAICharacter.h"
 #include "Components/AAIPerceptionComponent.h"
+#include "Components/ARespawnComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 AAAIController::AAAIController()
 {
     AAIPerceptionComponent = CreateDefaultSubobject<UAAIPerceptionComponent>("AIPerceptionComponent");
     SetPerceptionComponent(*AAIPerceptionComponent);
+
+    RespawnComponent = CreateDefaultSubobject<UARespawnComponent>("RespawnComponent");
 
     bWantsPlayerState = true;
 }

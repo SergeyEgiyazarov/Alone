@@ -2,15 +2,21 @@
 
 #include "AloneGameModeBase.h"
 #include "Player/ACharacter.h"
+#include "Player/APlayerController.h"
 #include "UI/AGameHUD.h"
 #include "AIController.h"
 #include "Player/APlayerState.h"
+#include "Components/ARespawnComponent.h"
+#include "AUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogAGameModeBase, All, All);
+
+constexpr int32 MinRoundTimeForRespawn = 10;
 
 AAloneGameModeBase::AAloneGameModeBase()
 {
     DefaultPawnClass = AACharacter::StaticClass();
+    PlayerControllerClass = AAPlayerController::StaticClass();
     HUDClass = AAGameHUD::StaticClass();
     PlayerStateClass = AAPlayerState::StaticClass();
 }
@@ -152,6 +158,8 @@ void AAloneGameModeBase::Killed(AController* KillerController, AController* Vict
     {
         VictimPlayerState->AddDeath();
     }
+
+    StartRespawn(VictimController);
 }
 
 void AAloneGameModeBase::LogPlayerInfo()
@@ -169,5 +177,21 @@ void AAloneGameModeBase::LogPlayerInfo()
 
         PlayerState->LogInfo();
     }
+}
+
+void AAloneGameModeBase::StartRespawn(AController* Controller)
+{
+    const auto RespawnAvailable = RoundCountDown > MinRoundTimeForRespawn + GameData.RespawnTime;
+    if (!RespawnAvailable) return;
+
+    const auto RespawnComponent = AUtils::GetAPlayerComponent<UARespawnComponent>(Controller);
+    if (!RespawnComponent) return;
+
+    RespawnComponent->Respawn(GameData.RespawnTime);
+}
+
+void AAloneGameModeBase::RespawnRequest(AController* Controller)
+{
+    ResetOnePlayer(Controller);
 }
 
