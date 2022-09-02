@@ -7,13 +7,22 @@
 
 bool UAPlayerHUDWidget::Initialize()
 {
-    const auto HealthComponent = AUtils::GetAPlayerComponent<UAHealthComponent>(GetOwningPlayerPawn());
-    if (HealthComponent)
+    if (GetOwningPlayer())
     {
-        HealthComponent->OnHealthChanged.AddUObject(this, &UAPlayerHUDWidget::OnHealthChange);
+        GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &UAPlayerHUDWidget::OnNewPawn);
+        OnNewPawn(GetOwningPlayerPawn());
     }
 
     return Super::Initialize();
+}
+
+void UAPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
+{
+    const auto HealthComponent = AUtils::GetAPlayerComponent<UAHealthComponent>(GetOwningPlayerPawn());
+    if (HealthComponent && !HealthComponent->OnHealthChanged.IsBoundToObject(this))
+    {
+        HealthComponent->OnHealthChanged.AddUObject(this, &UAPlayerHUDWidget::OnHealthChange);
+    }
 }
 
 void UAPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)

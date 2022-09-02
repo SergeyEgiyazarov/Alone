@@ -54,6 +54,7 @@ private:
     void SetPlayerColor(AController* Controller);
 
     void StartRespawn(AController* Controller);
+    void GameOver();
 
     void LogPlayerInfo();
 };

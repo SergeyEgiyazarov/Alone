@@ -8,6 +8,7 @@
 #include "Player/APlayerState.h"
 #include "Components/ARespawnComponent.h"
 #include "AUtils.h"
+#include "EngineUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogAGameModeBase, All, All);
 
@@ -74,8 +75,7 @@ void AAloneGameModeBase::GameTimerUpdate()
         }
         else
         {
-            UE_LOG(LogAGameModeBase, Display, TEXT("Game Over!"));
-            LogPlayerInfo();
+            GameOver();
         }
     }
 }
@@ -195,3 +195,17 @@ void AAloneGameModeBase::RespawnRequest(AController* Controller)
     ResetOnePlayer(Controller);
 }
 
+void AAloneGameModeBase::GameOver() 
+{
+    UE_LOG(LogAGameModeBase, Display, TEXT("Game Over!"));
+    LogPlayerInfo();
+
+    for (auto Pawn : TActorRange<APawn>(GetWorld()))
+    {
+        if (Pawn)
+        {
+            Pawn->TurnOff();
+            Pawn->DisableInput(nullptr);
+        }
+    }
+}
