@@ -6,10 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
-class UCameraComponent;
-class USpringArmComponent;
 class UAHealthComponent;
-class UTextRenderComponent;
 class UAWeaponComponent;
 
 UCLASS()
@@ -22,16 +19,7 @@ public:
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    USpringArmComponent* SpringArmComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    UCameraComponent* CameraComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UAHealthComponent* HealthComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    UTextRenderComponent* HealthText;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UAWeaponComponent* WeaponComponent;
@@ -55,22 +43,12 @@ protected:
 public:
     virtual void Tick(float DeltaTime) override;
 
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    bool IsRunning() const;
+    virtual bool IsRunning() const;
 
     void SetPlayerColor(const FLinearColor& Color);
 
 private:
-    bool WantsToRun = false;
-
-    void MoveForward(float Amount);
-    void MoveRight(float Amount);
-
-    void StartRunning();
-    void StopRunning();
-
     void OnHealthChanged(float Health, float HealthDelta);
 
     UFUNCTION()
