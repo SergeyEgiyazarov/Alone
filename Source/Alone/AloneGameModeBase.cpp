@@ -30,6 +30,8 @@ void AAloneGameModeBase::StartPlay()
     CreateTeamsInfo();
     CurrentRound = 1;
     StartRound();
+
+    SetMatchState(EAMatchState::InProgress);
 }
 
 UClass* AAloneGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -208,4 +210,14 @@ void AAloneGameModeBase::GameOver()
             Pawn->DisableInput(nullptr);
         }
     }
+
+    SetMatchState(EAMatchState::GameOver);
+}
+
+void AAloneGameModeBase::SetMatchState(EAMatchState State)
+{
+    if (MatchState == State) return;
+
+    MatchState = State;
+    OnMatchStateChanged.Broadcast(MatchState);
 }

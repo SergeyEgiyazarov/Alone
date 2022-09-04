@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "ACoreTypes.h"
 #include "AGameHUD.generated.h"
 
-/**
- *
- */
 UCLASS()
 class ALONE_API AAGameHUD : public AHUD
 {
@@ -25,4 +23,5 @@ protected:
 
 private:
     void DrawCrossHair();
+    void OnMatchStateChanged(EAMatchState State);
 };

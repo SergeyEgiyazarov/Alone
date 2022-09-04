@@ -3,6 +3,9 @@
 #include "UI/AGameHUD.h"
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h"
+#include "Alone/AloneGameModeBase.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogGameHUD, All, All);
 
 void AAGameHUD::DrawHUD()
 {
@@ -20,6 +23,20 @@ void AAGameHUD::BeginPlay()
     {
         PlayerHUD->AddToViewport();
     }
+
+    if (GetWorld())
+    {
+        const auto GameMode = Cast<AAloneGameModeBase>(GetWorld()->GetAuthGameMode());
+        if (GameMode)
+        {
+            GameMode->OnMatchStateChanged.AddUObject(this, &AAGameHUD::OnMatchStateChanged);
+        }
+    }
+}
+
+void AAGameHUD::OnMatchStateChanged(EAMatchState State) 
+{
+    UE_LOG(LogGameHUD, Display, TEXT("Match state changed: %s"), *UEnum::GetValueAsString(State));
 }
 
 void AAGameHUD::DrawCrossHair()
@@ -32,3 +49,4 @@ void AAGameHUD::DrawCrossHair()
     DrawLine(Center.Min - HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max, LineColor, LineThickness);
     DrawLine(Center.Min, Center.Max - HalfLineSize, Center.Min, Center.Max + HalfLineSize, LineColor, LineThickness);
 }
+
