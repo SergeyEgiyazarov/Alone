@@ -221,3 +221,27 @@ void AAloneGameModeBase::SetMatchState(EAMatchState State)
     MatchState = State;
     OnMatchStateChanged.Broadcast(MatchState);
 }
+
+bool AAloneGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+    const auto PauseSet = Super::SetPause(PC, CanUnpauseDelegate);
+
+    if (PauseSet)
+    {
+        SetMatchState(EAMatchState::Pause);
+    }
+
+    return PauseSet;
+}
+
+bool AAloneGameModeBase::ClearPause()
+{
+    const auto PauseCleared = Super::ClearPause();
+
+    if (PauseCleared)
+    {
+        SetMatchState(EAMatchState::InProgress);
+    }
+
+    return PauseCleared;
+}
