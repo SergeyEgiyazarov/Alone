@@ -7,6 +7,8 @@
 #include "ACoreTypes.h"
 #include "APlayerHUDWidget.generated.h"
 
+class UProgressBar;
+
 UCLASS()
 class ALONE_API UAPlayerHUDWidget : public UUserWidget
 {
@@ -31,10 +33,27 @@ public:
     UFUNCTION(BlueprintImplementableEvent, Category = "UI")
     void OnTakeDamage();
 
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    FString FormatBullets(int32 BulletsNum) const;
+
 protected:
+    UPROPERTY(meta = (BindWidget))
+    UProgressBar* HealthProgressBar;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    float PercentColorThreshold = 0.3f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FLinearColor GoodColor = FLinearColor::White;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FLinearColor BadColor = FLinearColor::Red;
+
     virtual void NativeOnInitialized() override;
 
 private:
     void OnHealthChange(float Health, float HealthDelta);
     void OnNewPawn(APawn* NewPawn);
+
+    void UpdateHealthColor();
 };

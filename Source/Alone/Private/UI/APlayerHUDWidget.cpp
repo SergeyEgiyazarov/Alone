@@ -4,6 +4,7 @@
 #include "Components/AHealthComponent.h"
 #include "Components/AWeaponComponent.h"
 #include "AUtils.h"
+#include "Components/ProgressBar.h"
 
 void UAPlayerHUDWidget::NativeOnInitialized()
 {
@@ -23,6 +24,8 @@ void UAPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
     {
         HealthComponent->OnHealthChanged.AddUObject(this, &UAPlayerHUDWidget::OnHealthChange);
     }
+
+    UpdateHealthColor();
 }
 
 void UAPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)
@@ -31,6 +34,8 @@ void UAPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)
     {
         OnTakeDamage();
     }
+
+    UpdateHealthColor();
 }
 
 float UAPlayerHUDWidget::GetHealthPercent() const
@@ -67,4 +72,29 @@ bool UAPlayerHUDWidget::IsPlayerSpectating() const
 {
     const auto Controller = GetOwningPlayer();
     return Controller && Controller->GetStateName() == NAME_Spectating;
+}
+
+
+void UAPlayerHUDWidget::UpdateHealthColor()
+{
+    if (HealthProgressBar)
+    {
+        HealthProgressBar->SetFillColorAndOpacity(GetHealthPercent() > PercentColorThreshold ? GoodColor : BadColor);
+    }
+}
+
+FString UAPlayerHUDWidget::FormatBullets(int32 BulletsNum) const
+{
+    const int32 MaxLen = 3;
+    const TCHAR PrefixSymbol = '0';
+
+    auto BulletStr = FString::FromInt(BulletsNum);
+    const auto SymbolNumToAdd = MaxLen - BulletStr.Len();
+
+    if (SymbolNumToAdd > 0)
+    {
+        BulletStr = FString::ChrN(SymbolNumToAdd, PrefixSymbol).Append(BulletStr);
+    }
+
+    return BulletStr;
 }

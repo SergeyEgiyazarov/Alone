@@ -58,6 +58,7 @@ void UAGameOverWidget::UpdatePlayerStat()
         PlayerStatRowWidget->SetDeaths(AUtils::TextFromInt(PlayerState->GetDeaths()));
         PlayerStatRowWidget->SetTeam(AUtils::TextFromInt(PlayerState->GetTeamID()));
         PlayerStatRowWidget->SetPlayerIndicatorVisibility(Controller->IsPlayerController());
+        PlayerStatRowWidget->SetTeamColor(PlayerState->GetTeamColor());
 
         PlayerStatBox->AddChild(PlayerStatRowWidget);
     }
