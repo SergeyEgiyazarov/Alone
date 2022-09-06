@@ -5,6 +5,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/AAIWeaponComponent.h"
 #include "BrainComponent.h"
+#include "Components/WidgetComponent.h"
+#include "UI/AHealthBarWidget.h"
+#include "Components/AHealthComponent.h"
 
 AAAICharacter::AAAICharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<UAAIWeaponComponent>("WeaponComponent"))
@@ -17,6 +20,25 @@ AAAICharacter::AAAICharacter(const FObjectInitializer& ObjInit)
     {
         GetCharacterMovement()->bUseControllerDesiredRotation = true;
     }
+
+    HealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("HealthWidgetComponent");
+    HealthWidgetComponent->SetupAttachment(GetRootComponent());
+    HealthWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+    HealthWidgetComponent->SetDrawAtDesiredSize(true);
+}
+
+void AAAICharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    check(HealthWidgetComponent);
+}
+
+void AAAICharacter::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    UpdateHealthWidgetVisibility();
 }
 
 void AAAICharacter::OnDeath()
@@ -28,4 +50,25 @@ void AAAICharacter::OnDeath()
     {
         AIController->BrainComponent->Cleanup();
     }
+}
+
+void AAAICharacter::OnHealthChanged(float Health, float HealthDelta)
+{
+    Super::OnHealthChanged(Health, HealthDelta);
+
+    const auto HealthBarWidget = Cast<UAHealthBarWidget>(HealthWidgetComponent->GetUserWidgetObject());
+    if (!HealthBarWidget) return;
+    HealthBarWidget->SetHealthPercent(HealthComponent->GetHealthPercent());
+}
+
+void AAAICharacter::UpdateHealthWidgetVisibility()
+{
+    if (!GetWorld() ||                             //
+        !GetWorld()->GetFirstPlayerController() || //
+        !GetWorld()->GetFirstPlayerController()->GetPawnOrSpectator())
+        return;
+
+    const auto PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawnOrSpectator()->GetActorLocation();
+    const auto Distance = FVector::Distance(PlayerLocation, GetActorLocation());
+    HealthWidgetComponent->SetVisibility(Distance < HealthVisibilityDistance, true);
 }
