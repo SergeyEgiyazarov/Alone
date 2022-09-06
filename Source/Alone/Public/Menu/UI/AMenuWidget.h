@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/ABaseWidget.h"
 #include "ACoreTypes.h"
 #include "AMenuWidget.generated.h"
 
@@ -13,7 +13,7 @@ class UAGameInstance;
 class UALevelItemWidget;
 
 UCLASS()
-class ALONE_API UAMenuWidget : public UUserWidget
+class ALONE_API UAMenuWidget : public UABaseWidget
 {
     GENERATED_BODY()
 
@@ -27,10 +27,14 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UHorizontalBox* LevelItemsBox;
 
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* HideAnimation;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<UUserWidget> LevelItemWidgetClass;
 
     virtual void NativeOnInitialized() override;
+    virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 
 private:
     UPROPERTY()

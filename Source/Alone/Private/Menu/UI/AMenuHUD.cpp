@@ -2,14 +2,19 @@
 
 #include "Menu/UI/AMenuHUD.h"
 #include "Menu/UI/AMenuWidget.h"
+#include "UI/ABaseWidget.h"
 
 void AAMenuHUD::BeginPlay()
 {
     Super::BeginPlay();
 
-    const auto MenuWidget = CreateWidget<UAMenuWidget>(GetWorld(), MenuWidgetClass);
-    if (MenuWidget)
+    if (MenuWidgetClass)
     {
-        MenuWidget->AddToViewport();
+        const auto MenuWidget = CreateWidget<UABaseWidget>(GetWorld(), MenuWidgetClass);
+        if (MenuWidget)
+        {
+            MenuWidget->AddToViewport();
+            MenuWidget->Show();
+        }
     }
 }

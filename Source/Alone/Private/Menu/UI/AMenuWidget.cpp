@@ -78,6 +78,13 @@ void UAMenuWidget::OnLevelSelected(const FLevelData& Data)
 
 void UAMenuWidget::OnStartGame()
 {
+    PlayAnimation(HideAnimation);
+}
+
+void UAMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+{
+    if (Animation != HideAnimation) return;
+
     const auto AGameInstance = GetAGameInstance();
     if (!AGameInstance) return;
 

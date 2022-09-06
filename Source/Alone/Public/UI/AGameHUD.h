@@ -7,6 +7,8 @@
 #include "ACoreTypes.h"
 #include "AGameHUD.generated.h"
 
+class UABaseWidget;
+
 UCLASS()
 class ALONE_API AAGameHUD : public AHUD
 {
@@ -29,10 +31,10 @@ protected:
 
 private:
     UPROPERTY()
-    TMap<EAMatchState, UUserWidget*> GameWidgets;
+    TMap<EAMatchState, UABaseWidget*> GameWidgets;
 
     UPROPERTY()
-    UUserWidget* CurrentWidget = nullptr;
+    UABaseWidget* CurrentWidget = nullptr;
 
     void DrawCrossHair();
     void OnMatchStateChanged(EAMatchState State);
