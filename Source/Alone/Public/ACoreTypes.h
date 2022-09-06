@@ -119,3 +119,21 @@ enum class EAMatchState : uint8
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, EAMatchState);
+
+
+USTRUCT(BlueprintType)
+struct FLevelData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Geme")
+    FName LevelName = NAME_None;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Geme")
+    FName LevelDisplayName = NAME_None;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Geme")
+    UTexture2D* LevelTumb;
+};
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelSelectedSignature, const FLevelData&);

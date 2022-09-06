@@ -5,15 +5,15 @@
 #include "Components/AWeaponComponent.h"
 #include "AUtils.h"
 
-bool UAPlayerHUDWidget::Initialize()
+void UAPlayerHUDWidget::NativeOnInitialized()
 {
+    Super::NativeOnInitialized();
+
     if (GetOwningPlayer())
     {
         GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &UAPlayerHUDWidget::OnNewPawn);
         OnNewPawn(GetOwningPlayerPawn());
     }
-
-    return Super::Initialize();
 }
 
 void UAPlayerHUDWidget::OnNewPawn(APawn* NewPawn)

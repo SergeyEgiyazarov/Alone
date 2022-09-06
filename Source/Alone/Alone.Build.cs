@@ -32,7 +32,9 @@ public class Alone : ModuleRules
 			"Alone/Public/AI",
 			"Alone/Public/AI/Tasks",
 			"Alone/Public/AI/Services",
-			"Alone/Public/AI/EQS"
+			"Alone/Public/AI/EQS",
+			"Alone/Public/Menu",
+			"Alone/Public/Menu/UI"
 		});
 
 		// Uncomment if you are using Slate UI

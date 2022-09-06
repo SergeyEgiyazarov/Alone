@@ -7,9 +7,13 @@
 #include "UI/APlayerStatRowWidget.h"
 #include "Components/VerticalBox.h"
 #include "AUtils.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
-bool UAGameOverWidget::Initialize()
+void UAGameOverWidget::NativeOnInitialized()
 {
+    Super::NativeOnInitialized();
+
     if (GetWorld())
     {
         const auto GameMode = Cast<AAloneGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -19,7 +23,10 @@ bool UAGameOverWidget::Initialize()
         }
     }
 
-    return Super::Initialize();
+    if (ResetLevelButton)
+    {
+        ResetLevelButton->OnClicked.AddDynamic(this, &UAGameOverWidget::OnResetLevel);
+    }
 }
 
 void UAGameOverWidget::OnMatchStateChanged(EAMatchState State)
@@ -54,4 +61,10 @@ void UAGameOverWidget::UpdatePlayerStat()
 
         PlayerStatBox->AddChild(PlayerStatRowWidget);
     }
+}
+
+void UAGameOverWidget::OnResetLevel()
+{
+    const FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this);
+    UGameplayStatics::OpenLevel(this, FName(CurrentLevelName));
 }

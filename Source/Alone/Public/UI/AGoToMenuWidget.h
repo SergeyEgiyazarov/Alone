@@ -4,22 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "APauseWidget.generated.h"
+#include "AGoToMenuWidget.generated.h"
 
 class UButton;
 
 UCLASS()
-class ALONE_API UAPauseWidget : public UUserWidget
+class ALONE_API UAGoToMenuWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 protected:
-    virtual void NativeOnInitialized() override;
-
     UPROPERTY(meta = (BindWidget))
-    UButton* ClearPauseButton;
+    UButton* MainMenuButton;
+
+    virtual void NativeOnInitialized() override;
 
 private:
     UFUNCTION()
-    void OnClearPuse();
+    void GoToMainMenu();
 };
