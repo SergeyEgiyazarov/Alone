@@ -7,6 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/HorizontalBox.h"
 #include "Menu/UI/ALevelItemWidget.h"
+#include "Sound/SoundCue.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogAGameInstance, All, All);
 
@@ -79,6 +80,7 @@ void UAMenuWidget::OnLevelSelected(const FLevelData& Data)
 void UAMenuWidget::OnStartGame()
 {
     PlayAnimation(HideAnimation);
+    UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 }
 
 void UAMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)

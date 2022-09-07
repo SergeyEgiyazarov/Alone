@@ -8,6 +8,7 @@
 
 class UAWeaponFXComponent;
 class UNiagaraSystem;
+class UAudioComponent;
 
 UCLASS()
 class ALONE_API AARifleWeapon : public AABaseWeapon
@@ -47,6 +48,12 @@ protected:
 
 private:
     FTimerHandle ShotTimerHandle;
+
+    UPROPERTY()
+    UAudioComponent* FireAudioComponent;
+
+    void InitFX();
+    void SetFXActive(bool IsActive);
 
     void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
     AController* GetController() const;

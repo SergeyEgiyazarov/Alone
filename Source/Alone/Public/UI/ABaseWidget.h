@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "ABaseWidget.generated.h"
 
+class USoundCue;
+
 UCLASS()
 class ALONE_API UABaseWidget : public UUserWidget
 {
@@ -17,4 +19,7 @@ public:
 protected:
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* ShowAnimation;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* OpenSound;
 };

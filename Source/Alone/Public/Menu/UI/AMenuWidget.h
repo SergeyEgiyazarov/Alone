@@ -11,6 +11,7 @@ class UButton;
 class UHorizontalBox;
 class UAGameInstance;
 class UALevelItemWidget;
+class USoundCue;
 
 UCLASS()
 class ALONE_API UAMenuWidget : public UABaseWidget
@@ -32,6 +33,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<UUserWidget> LevelItemWidgetClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* StartGameSound;
 
     virtual void NativeOnInitialized() override;
     virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;

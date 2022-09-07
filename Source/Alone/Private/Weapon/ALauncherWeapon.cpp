@@ -3,6 +3,8 @@
 #include "Weapon/ALauncherWeapon.h"
 #include "Weapon/AProjectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 void AALauncherWeapon::StartFire()
 {
@@ -11,7 +13,13 @@ void AALauncherWeapon::StartFire()
 
 void AALauncherWeapon::MakeShot()
 {
-    if (!GetWorld() || IsAmmoEmpty()) return;
+    if (!GetWorld()) return;
+
+    if (IsAmmoEmpty())
+    {
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), NoAmmoSound, GetActorLocation());
+        return;
+    }
 
     if (IsClipsEmpty())
     {
@@ -41,4 +49,6 @@ void AALauncherWeapon::MakeShot()
 
     DecreaseAmmo();
     SpawnMuzzleFX();
+
+    UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
 }

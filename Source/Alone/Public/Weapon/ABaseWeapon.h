@@ -8,6 +8,7 @@
 #include "ABaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class USoundCue;
 
 UCLASS()
 class ALONE_API AABaseWeapon : public AActor
@@ -57,6 +58,12 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     UNiagaraSystem* MuzzleFX;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* FireSound;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* NoAmmoSound;
 
     virtual void BeginPlay() override;
 

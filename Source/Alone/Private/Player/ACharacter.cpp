@@ -6,6 +6,8 @@
 #include "Components/AWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Controller.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(CharacterLog, All, All);
 
@@ -58,6 +60,8 @@ void AACharacter::OnDeath()
 
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     WeaponComponent->StopFire();
+
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 }
 
 void AACharacter::OnGroundLanded(const FHitResult& Hit)

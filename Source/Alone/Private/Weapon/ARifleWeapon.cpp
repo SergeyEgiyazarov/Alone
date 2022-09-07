@@ -7,6 +7,10 @@
 #include "Weapon/Components/AWeaponFXComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
+
 
 AARifleWeapon::AARifleWeapon()
 {
@@ -22,6 +26,7 @@ void AARifleWeapon::BeginPlay()
 
 void AARifleWeapon::StartFire()
 {
+    InitFX();
     GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &AARifleWeapon::MakeShot, TimeBetweenShots, true);
     MakeShot();
 }
@@ -29,6 +34,7 @@ void AARifleWeapon::StartFire()
 void AARifleWeapon::StopFire()
 {
     GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+    SetFXActive(false);
 }
 
 void AARifleWeapon::MakeShot()
@@ -104,4 +110,27 @@ AController* AARifleWeapon::GetController() const
 {
     const auto Pawn = Cast<APawn>(GetOwner());
     return Pawn ? Pawn->GetController() : nullptr;
+}
+
+void AARifleWeapon::InitFX()
+{
+    if (IsAmmoEmpty())
+    {
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), NoAmmoSound, GetActorLocation());
+        return;
+    }
+
+    if (!FireAudioComponent)
+    {
+        FireAudioComponent = UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+    }
+    SetFXActive(true);
+}
+
+void AARifleWeapon::SetFXActive(bool IsActive)
+{
+    if (FireAudioComponent)
+    {
+        IsActive ? FireAudioComponent->Play() : FireAudioComponent->Stop();
+    }
 }

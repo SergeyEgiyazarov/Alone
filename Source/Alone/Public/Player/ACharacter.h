@@ -8,6 +8,7 @@
 
 class UAHealthComponent;
 class UAWeaponComponent;
+class USoundCue;
 
 UCLASS()
 class ALONE_API AACharacter : public ACharacter
@@ -35,6 +36,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Material")
     FName MaterialColorName = "BodyColor";
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* DeathSound;
 
     virtual void BeginPlay() override;
 
