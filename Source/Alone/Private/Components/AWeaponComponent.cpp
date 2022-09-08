@@ -115,6 +115,7 @@ void UAWeaponComponent::StartEquipWeapon()
 {
     EquipAnimInProgress = true;
     CurrentWeapon->StopFire();
+    CurrentWeapon->Zoom(false);
     PlayAnimMontage(EquipAnimMontage);
 }
 
@@ -268,4 +269,12 @@ bool UAWeaponComponent::NeedAmmo(TSubclassOf<AABaseWeapon> WeaponType)
         }
     }
     return false;
+}
+
+void UAWeaponComponent::Zoom(bool Enabled)
+{
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->Zoom(Enabled);
+    }
 }

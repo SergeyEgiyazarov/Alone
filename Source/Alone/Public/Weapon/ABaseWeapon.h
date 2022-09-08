@@ -26,19 +26,15 @@ public:
     void ChangeClips();
     bool CanReload() const;
 
-    FWeaponUIData GetUIData() const
-    {
-        return UIData;
-    }
+    FWeaponUIData GetUIData() const { return UIData; }
 
-    FAmmoData GetAmmoData() const
-    {
-        return CurrentAmmo;
-    }
+    FAmmoData GetAmmoData() const { return CurrentAmmo; }
 
     bool TryToAddAmmo(int32 AmmoAmount);
     bool IsAmmoEmpty() const;
     bool IsAmmoFull() const;
+
+    void Zoom(bool Enabled);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -52,6 +48,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     FAmmoData DefaultAmmo{30, 150, false};
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    float FOVZoomAngle = 50.0f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FWeaponUIData UIData;
@@ -83,4 +82,6 @@ protected:
 
 private:
     FAmmoData CurrentAmmo;
+
+    float DefaultCameraFOV = 90.0f;
 };

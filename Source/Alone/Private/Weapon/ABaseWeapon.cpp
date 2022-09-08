@@ -194,3 +194,19 @@ void AABaseWeapon::SpawnMuzzleFX()
         FRotator::ZeroRotator,                             //
         EAttachLocation::SnapToTarget, true);
 }
+
+void AABaseWeapon::Zoom(bool Enabled)
+{
+    const auto Pawn = Cast<APawn>(GetOwner());
+    if (!Pawn) return;
+
+    const auto Controller = Cast<APlayerController>(Pawn->GetController());
+    if (!Controller || !Controller->PlayerCameraManager) return;
+
+    if (Enabled)
+    {
+        DefaultCameraFOV = Controller->PlayerCameraManager->GetFOVAngle();
+    }
+
+    Controller->PlayerCameraManager->SetFOV(Enabled ? FOVZoomAngle : DefaultCameraFOV);
+}
