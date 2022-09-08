@@ -7,6 +7,7 @@
 #include "AIController.h"
 #include "Player/APlayerState.h"
 #include "Components/ARespawnComponent.h"
+#include "Components/AWeaponComponent.h"
 #include "AUtils.h"
 #include "EngineUtils.h"
 
@@ -230,6 +231,7 @@ bool AAloneGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseD
 
     if (PauseSet)
     {
+        StopAllFire();
         SetMatchState(EAMatchState::Pause);
     }
 
@@ -246,4 +248,19 @@ bool AAloneGameModeBase::ClearPause()
     }
 
     return PauseCleared;
+}
+
+void AAloneGameModeBase::StopAllFire()
+{
+    for (auto Pawn : TActorRange<APawn>(GetWorld()))
+    {
+        if (Pawn)
+        {
+            const auto WeaponComponent = AUtils::GetAPlayerComponent<UAWeaponComponent>(Pawn);
+            if (!WeaponComponent) continue;
+
+            WeaponComponent->StopFire();
+            WeaponComponent->Zoom(false);
+        }
+    }
 }

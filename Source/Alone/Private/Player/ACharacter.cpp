@@ -82,3 +82,17 @@ void AACharacter::SetPlayerColor(const FLinearColor& Color)
 
     MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
 }
+
+void AACharacter::TurnOff()
+{
+    WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
+    Super::TurnOff();
+}
+
+void AACharacter::Reset()
+{
+    WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
+    Super::Reset();
+}

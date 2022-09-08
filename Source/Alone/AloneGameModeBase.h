@@ -63,5 +63,7 @@ private:
 
     void SetMatchState(EAMatchState State);
 
+    void StopAllFire();
+
     void LogPlayerInfo();
 };
