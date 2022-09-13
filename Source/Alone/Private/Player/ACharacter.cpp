@@ -72,7 +72,7 @@ void AACharacter::OnGroundLanded(const FHitResult& Hit)
     if (FallVelocityZ < LandedDamageVelocity.X) return;
     const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
 
-    TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
+    TakeDamage(FinalDamage, FPointDamageEvent{}, nullptr, nullptr);
 }
 
 void AACharacter::SetPlayerColor(const FLinearColor& Color)
